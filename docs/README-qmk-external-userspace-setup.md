@@ -1,19 +1,25 @@
 # QMK External Userspace Setup
 
-These instructions configure an existing QMK firmware checkout to use an external QMK Userspace repository. See the official documentation for [Setting Up Your QMK Environment](https://docs.qmk.fm/newbs_getting_started) and [External QMK Userspace](https://docs.qmk.fm/newbs_external_userspace) for more info.
+These instructions configure an existing QMK firmware checkout to use an external QMK Userspace repository.
+
+See the official documentation for [Setting Up Your QMK Environment](https://docs.qmk.fm/newbs_getting_started) and [External QMK Userspace](https://docs.qmk.fm/newbs_external_userspace) for more information.
+
+Path examples use `$HOME` when showing commands or filesystem locations.
+
+When showing example program output, absolute paths use `/home/<user>/...` because QMK prints expanded filesystem paths rather than shell variables.
 
 The expected directory structure is:
 
 ```text
-~/src/qmk/
+$HOME/src/qmk/
 ├── qmk_distribution/
 ├── qmk_firmware/
 └── qmk_userspace/
 ```
 
 - `qmk_firmware` is the QMK firmware Git repository.
-- `qmk_userspace` contains personal keymaps, layouts, and shared configuration.
-- `qmk_distribution` is the environment managed by QMK's environment bootstrap installer.
+- `qmk_userspace` contains personal keymaps, layouts, shared configuration, and archived firmware.
+- `qmk_distribution` contains the toolchains and supporting environment managed by the QMK environment bootstrap installer.
 
 The repositories remain separate. QMK combines the firmware repository and userspace overlay at build time.
 
@@ -28,7 +34,7 @@ type -a qmk
 With the bootstrap installation used here, the executable is:
 
 ```text
-/home/justin/.local/bin/qmk
+/home/<user>/.local/bin/qmk
 ```
 
 Check the installed CLI version:
@@ -51,13 +57,13 @@ This is important when using an existing QMK repository rather than allowing `qm
 
 ## 3. Configure the External Userspace Repository
 
-Tell QMK where the external userspace repository is located:
+Tell QMK where the External Userspace repository is located:
 
 ```bash
 qmk config user.overlay_dir="$HOME/src/qmk/qmk_userspace"
 ```
 
-`user.overlay_dir` identifies the external userspace that QMK overlays onto the firmware source tree during builds.
+`user.overlay_dir` identifies the External Userspace that QMK overlays onto the firmware source tree during builds.
 
 ## 4. Verify the Configuration
 
@@ -67,11 +73,11 @@ Display the current QMK CLI configuration:
 qmk config
 ```
 
-The important settings should be:
+The important settings should point to the intended repositories, for example:
 
 ```text
-user.qmk_home=/home/justin/src/qmk/qmk_firmware
-user.overlay_dir=/home/justin/src/qmk/qmk_userspace
+user.qmk_home=/home/<user>/src/qmk/qmk_firmware
+user.overlay_dir=/home/<user>/src/qmk/qmk_userspace
 ```
 
 These settings have different purposes:
@@ -81,7 +87,7 @@ user.qmk_home
 	QMK firmware source and build system
 
 user.overlay_dir
-	Personal external QMK Userspace
+	Personal External QMK Userspace
 ```
 
 `qmk.json` does not establish the connection between these repositories. The QMK CLI configuration does.
@@ -97,9 +103,9 @@ qmk userspace-doctor
 A working configuration should produce output similar to:
 
 ```text
-Ψ QMK home: /home/justin/src/qmk/qmk_firmware
-Ψ Testing userspace candidate: /home/justin/src/qmk/qmk_userspace -- Valid `qmk.json`
-Ψ QMK userspace: /home/justin/src/qmk/qmk_userspace
+Ψ QMK home: /home/<user>/src/qmk/qmk_firmware
+Ψ Testing userspace candidate: /home/<user>/src/qmk/qmk_userspace -- Valid `qmk.json`
+Ψ QMK userspace: /home/<user>/src/qmk/qmk_userspace
 Ψ Userspace enabled: True
 ```
 
@@ -172,10 +178,10 @@ A correctly configured system should satisfy all of the following:
 
 ```text
 qmk_firmware:
-	~/src/qmk/qmk_firmware
+	$HOME/src/qmk/qmk_firmware
 
 qmk_userspace:
-	~/src/qmk/qmk_userspace
+	$HOME/src/qmk/qmk_userspace
 
 QMK configuration:
 	user.qmk_home points to qmk_firmware
@@ -191,7 +197,7 @@ Once these checks pass, QMK External Userspace is ready for keymaps, layouts, an
 
 ## 6. Understand the Overlay
 
-QMK does not copy userspace files into `qmk_firmware`.
+QMK does not copy userspace source files into `qmk_firmware`.
 
 For example, the firmware repository may contain:
 
@@ -257,7 +263,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 The layout macro translates those physical key positions into the keyboard's electrical matrix positions.
 
-### Keyboard Layouts vs. Shared Userspace Layouts
+### Keyboard Layout Macros vs. Shared Userspace Layouts
 
 There are two related concepts that should not be confused.
 
@@ -274,9 +280,42 @@ qmk_userspace/
 └── layouts/
 ```
 
-A shared userspace layout allows one keymap to be reused across multiple keyboards that expose a compatible standard layout macro.
+A shared userspace layout allows one keymap to be reused across multiple keyboards that expose a compatible standard layout.
 
-Therefore, `layouts/` does not define new physical capabilities for a keyboard. The keyboard definition must already provide a compatible layout macro.
+For example, several TKL keyboards may have completely different:
+
+```text
+controllers
+PCBs
+matrices
+row/column wiring
+```
+
+while still exposing the same standard physical TKL layout.
+
+Those keyboards can potentially share one keymap under `layouts/`. Each keyboard's own firmware definition remains responsible for translating that common physical layout into its own electrical matrix.
+
+Conceptually:
+
+```text
+TKL A matrix ─┐
+TKL B matrix ─┼── common physical layout ── shared keymap
+TKL C matrix ─┘
+```
+
+Therefore, `layouts/` does not define new physical capabilities for a keyboard. The keyboard definition must already provide a compatible layout.
+
+Use:
+
+```text
+layouts/
+	Shared keymaps for compatible physical layouts.
+
+keyboards/
+	Board-specific keymaps.
+```
+
+Do not force a keyboard into a shared layout merely to eliminate a small amount of duplication.
 
 ### DZ60 Example
 
@@ -299,7 +338,7 @@ This provides both split Backspace and split Right Shift.
 
 The physical DZ60 PCB has been electrically verified to connect the normal 2u Backspace position to the matrix position used by the right-hand key of the split Backspace arrangement.
 
-Therefore, the existing layout can initially be used by assigning `KC_NO` to the unused split-Backspace position and `KC_BSPC` to the position corresponding to the physical 2u Backspace:
+Therefore, the existing layout can be used by assigning `KC_NO` to the unused split-Backspace position and `KC_BSPC` to the position corresponding to the physical 2u Backspace:
 
 ```c
 KC_NO, KC_BSPC
@@ -411,7 +450,7 @@ Doing so leads to configuration such as:
 #define SOME_SETTING new_value
 ```
 
-or keyboard-specific conditionals in the shared userspace:
+or keyboard-specific conditionals in shared userspace:
 
 ```c
 #ifdef KEYBOARD_some_keyboard
@@ -436,6 +475,20 @@ Avoid relying on preprocessor include order to resolve conflicting definitions.
 ### `rules.mk`
 
 A user `rules.mk` can provide shared build configuration or enable QMK features used by all corresponding keymaps.
+
+For example, VIA is intended to be available on all standardized keyboards, so it is enabled once in:
+
+```text
+users/justin/rules.mk
+```
+
+with:
+
+```make
+VIA_ENABLE = yes
+```
+
+This makes VIA a shared userspace build feature rather than repeating the setting in every keyboard keymap.
 
 QMK processes the keymap `rules.mk` before the user `rules.mk`. Therefore, ordinary Make variable assignments in the user `rules.mk` can override assignments made earlier by the keymap.
 
@@ -578,7 +631,7 @@ For example:
 Build dz60:justin                                                      [OK]
 ```
 
-As additional keyboards are standardized, they can be added to `build_targets`. `qmk userspace-compile` can then be used to build the configured userspace targets without specifying each keyboard individually.
+As additional keyboards are standardized, they can be added to `build_targets`.
 
 `qmk.json` therefore describes which keyboard/keymap combinations belong to the External Userspace build set. It does not replace QMK's normal build system.
 
@@ -592,7 +645,7 @@ users/justin/
 
 can provide configuration shared by the `justin` keymaps.
 
-For example, VIA is intended to be available on all standardized keyboards. Instead of adding the same setting to every keyboard-specific `rules.mk`, enable it once in:
+VIA is intended to be available on all standardized keyboards. Instead of adding the same setting to every keyboard-specific `rules.mk`, it is enabled once in:
 
 ```text
 users/justin/rules.mk
@@ -604,20 +657,7 @@ with:
 VIA_ENABLE = yes
 ```
 
-This makes VIA a shared userspace build feature rather than a board-specific setting.
-
-The resulting structure is:
-
-```text
-qmk_userspace/
-└── users/
-	└── justin/
-		└── rules.mk
-```
-
-Keyboard-specific `rules.mk` files should be reserved for settings that genuinely differ for a particular keyboard.
-
-A verbose DZ60 build confirmed that the shared setting was applied. The generated compiler options included:
+A verbose DZ60 build confirmed that the shared setting was applied. The compiler configuration included:
 
 ```text
 -DVIA_ENABLE
@@ -640,7 +680,7 @@ The QMK environment bootstrap installer places its managed toolchains in the con
 For this setup:
 
 ```text
-~/src/qmk/qmk_distribution
+$HOME/src/qmk/qmk_distribution
 ```
 
 The location should be made available to QMK through the `QMK_DISTRIB_DIR` environment variable.
@@ -685,7 +725,7 @@ gmake: *** [builddefs/common_rules.mk:221: gccversion] Error 127
 The compiler may still exist at:
 
 ```text
-~/src/qmk/qmk_distribution/bin/avr-gcc
+$HOME/src/qmk/qmk_distribution/bin/avr-gcc
 ```
 
 In that situation, configure `QMK_DISTRIB_DIR` rather than installing another AVR toolchain.
@@ -703,55 +743,252 @@ gmake: *** No rule to make target 'lib/lufa/LUFA/makefile'. Stop.
 
 This indicates that the LUFA submodule required by the AVR USB implementation is missing.
 
-From the QMK firmware repository, initialize/update the QMK submodules with:
+From the QMK firmware repository, initialize or update the QMK submodules with:
 
 ```bash
-cd ~/src/qmk/qmk_firmware && qmk git-submodule
+cd "$HOME/src/qmk/qmk_firmware" && qmk git-submodule
 ```
 
 After the submodules and managed toolchain are available, the External Userspace build can be retried normally.
 
-## 13. Understand Build Outputs
+## 13. Maintain Standard and Vendor QMK Branches
 
-QMK performs the actual build inside the `qmk_firmware` build directory.
+A single local `qmk_firmware` repository is used for upstream QMK and vendor forks.
 
-For the DZ60 `justin` keymap, the primary build artifact is:
+Separate clones are not required.
 
-```text
-~/src/qmk/qmk_firmware/.build/dz60_justin.hex
-```
-
-After a successful External Userspace build, QMK also copies the resulting firmware to:
+The configured remotes are:
 
 ```text
-~/src/qmk/qmk_firmware/dz60_justin.hex
+origin
+	Personal GitHub fork of standard QMK
+
+massdrop
+	Massdrop QMK fork
+
+keychron
+	Keychron QMK fork
 ```
 
-and:
+Inspect them with:
+
+```bash
+git remote -v
+```
+
+Current remote URLs are:
 
 ```text
-~/src/qmk/qmk_userspace/dz60_justin.hex
+origin     https://github.com/<github-user>/qmk_firmware.git
+massdrop   https://github.com/Massdrop/qmk_firmware.git
+keychron   https://github.com/Keychron/qmk_firmware.git
 ```
 
-The userspace copy makes the firmware artifact readily available alongside the userspace that produced it.
+Fetch vendor code without changing the currently checked-out branch:
 
-These root-level files should be treated as generated build outputs, not as the permanent archive of known-good firmware.
+```bash
+git fetch massdrop --prune && git fetch keychron --prune
+```
 
-Known-good firmware should instead be copied into the repository's dedicated firmware archive along with information identifying exactly how it was built.
+Use `fetch`, not `pull`, when retrieving vendor code. `pull` also attempts to merge retrieved code into the currently checked-out branch.
 
-The planned archive structure is:
+The current local firmware branches are:
+
+```text
+master
+massdrop-master
+keychron-k2-he
+keychron-k10-pro
+justin-userspace
+```
+
+Vendor-derived branches currently originate from:
+
+```text
+massdrop-master
+	massdrop/master
+
+keychron-k2-he
+	keychron/2025q3
+
+keychron-k10-pro
+	keychron/wls_2025q1
+```
+
+Switching `qmk_firmware` branches changes the QMK implementation and hardware definitions used when External Userspace builds a keymap.
+
+Before switching branches:
+
+```bash
+git status
+```
+
+Then select the required firmware branch:
+
+```bash
+git checkout master
+```
+
+or, for example:
+
+```bash
+git checkout massdrop-master
+```
+
+Vendor-derived local branches should be pushed to the personal `origin` repository, not back to the vendor repository.
+
+For example:
+
+```bash
+git push -u origin massdrop-master && git push -u origin keychron-k2-he
+```
+
+This allows External Userspace to remain the personal configuration layer while different keyboards use the appropriate upstream or vendor QMK source tree.
+
+## 14. Build and Archive Firmware
+
+Normal QMK compilation remains available:
+
+```bash
+qmk compile -kb dz60 -km justin
+```
+
+However, firmware intended to be retained or flashed should normally be built with:
+
+```bash
+./build-archive.sh -kb dz60 -km justin
+```
+
+For verbose QMK output:
+
+```bash
+./build-archive.sh -v -kb dz60 -km justin
+```
+
+`build-archive.sh` is a thin wrapper around QMK compilation. QMK remains responsible for the actual build.
+
+The wrapper:
+
+- verifies the source repositories before building
+- determines `qmk_userspace` from its own Git repository
+- determines `qmk_firmware` from `qmk config user.qmk_home`
+- records the exact `qmk_userspace` Git branch and commit
+- records the exact `qmk_firmware` Git branch and commit
+- obtains keyboard information from `qmk info -kb`
+- records the exact build start and finish time
+- invokes `qmk compile`
+- displays QMK output normally during the build
+- captures the QMK build output
+- strips terminal escape sequences from the stored copy
+- identifies the resulting `.hex` or `.bin`
+- moves the userspace-root build artifact into the firmware archive
+- records the file size and SHA-256 digest
+- stores the complete build output in `info.txt`
+
+The archive structure is:
 
 ```text
 firmware/
 └── {keyboard}/
-	└── {build}/
+	└── {ISO-like timestamp}/
 		├── info.txt
-		└── firmware.bin-or-hex
+		└── firmware.hex-or-bin
 ```
 
-Archiving is separate from compilation. QMK remains responsible for building firmware; the archive process only preserves an already-built and tested artifact.
+For example:
 
-## 14. Reading Layout Geometry in `keyboard.json`
+```text
+firmware/
+└── dz60/
+	└── 2026-08-13T23-50-58-0500/
+		├── info.txt
+		└── dz60_justin.hex
+```
+
+The directory timestamp uses a filesystem-safe ISO-8601-like format including seconds and timezone.
+
+The metadata inside `info.txt` uses normal ISO 8601 timestamps.
+
+A typical archive records:
+
+```text
+Keyboard: dz60
+Keyboard Name: DZ60
+Manufacturer: KBDFans
+Maintainer: QMK Community
+Processor: atmega32u4
+Bootloader: atmel-dfu
+Keymap: justin
+
+Build started: ...
+Build finished: ...
+
+Firmware:
+	Filename: dz60_justin.hex
+	File size: ...
+	SHA-256: ...
+
+qmk_userspace:
+	Repository: ...
+	Branch: ...
+	Commit: ...
+
+qmk_firmware:
+	Repository: ...
+	Branch: ...
+	Commit: ...
+
+Build output:
+	...
+```
+
+The captured QMK output also preserves QMK's own firmware-size calculation, for example:
+
+```text
+The firmware size is fine - 25602/28672 (89%, 3070 bytes free)
+```
+
+The archive script intentionally does not reimplement QMK's firmware-size calculation.
+
+### Source Cleanliness
+
+The source used to produce an archived firmware build must be identifiable by Git.
+
+Changes to userspace source files or `qmk_firmware` therefore prevent an archived build until those changes are committed.
+
+Existing firmware archives under:
+
+```text
+firmware/
+```
+
+do not count as dirty userspace source and do not need to be committed before another build.
+
+This permits firmware archives to remain local if desired while still ensuring that each archived binary refers to identifiable source revisions.
+
+### Generated Root Firmware
+
+QMK normally copies generated firmware to the root of both `qmk_firmware` and `qmk_userspace`.
+
+The root-level userspace artifacts are generated files and are ignored by Git:
+
+```gitignore
+/*.hex
+/*.bin
+```
+
+After a successful archived build, `build-archive.sh` moves the userspace-root artifact into the appropriate `firmware/` archive directory.
+
+The copies inside:
+
+```text
+qmk_firmware/
+qmk_firmware/.build/
+```
+
+are left alone.
+
+## 15. Reading Layout Geometry in `keyboard.json`
 
 A layout entry in `keyboard.json` connects a physical key position with an electrical matrix position.
 
@@ -893,7 +1130,7 @@ The underlying layout data can also be inspected directly from `keyboard.json`.
 For example:
 
 ```bash
-jq -r '.layouts.LAYOUT_60_ansi_split_bs_rshift.layout[] | "\(.matrix | join(","))\tx=\(.x)\ty=\(.y)\tw=\(.w // 1)"' ~/src/qmk/qmk_firmware/keyboards/dz60/keyboard.json
+jq -r '.layouts.LAYOUT_60_ansi_split_bs_rshift.layout[] | "\(.matrix | join(","))\tx=\(.x)\ty=\(.y)\tw=\(.w // 1)"' "$HOME/src/qmk/qmk_firmware/keyboards/dz60/keyboard.json"
 ```
 
 This produces a compact representation showing:
@@ -905,3 +1142,25 @@ matrix coordinate	physical x	physical y	width
 while preserving the order of the layout entries.
 
 This is useful when creating or adapting a keymap because it shows both the physical layout and the matrix positions represented by the selected QMK layout macro.
+
+## 16. Working Model
+
+The final separation of responsibilities is:
+
+```text
+qmk_firmware
+	QMK implementation, keyboard hardware definitions, and vendor branches.
+
+qmk_userspace source
+	Authoritative personal keymaps, shared layouts, behavior, and configuration.
+
+VIA
+	Experimentation and temporary dynamic remapping.
+
+firmware/
+	Archived build artifacts with source provenance and QMK build output.
+```
+
+VIA configuration is not the source of truth.
+
+Changes intended to become permanent should be represented in userspace source, compiled with QMK, and archived when a firmware build is worth retaining.

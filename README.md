@@ -2,17 +2,20 @@
 
 This was created from a template repository which allows for an external set of QMK keymaps to be defined and compiled. This is useful for users who want to maintain their own keymaps without having to fork the [main QMK repository](https://github.com/qmk/qmk_firmware). You must still fork the main QMK repository if writing firmware for a *new* keyboard.
 
-For instructions see [Setup](#setup)
+For fork-specific instructions see [README-qmk-external-userspace-setup.md](docs/README-qmk-external-userspace-setup.md)
 
 ## Goals
 
 * Maintain a large number of keyboards.
-* Keep references to specific forks and commits for nonstandard boards (Massdrop, Keychron)
-* Standardize on a modern QMK workflow.
+* Keep personal keymaps separate from QMK firmware.
+* Keep references to specific forks and commits for nonstandard boards (Massdrop, Keychron).
+* Standardize on a modern QMK External Userspace workflow.
 * Use a universal layout philosophy across boards.
 * Prefer one shared source of truth.
+* Use shared layouts when multiple keyboards expose a compatible physical layout.
 * Support ANSI and Mac modes.
 * Keep VIA available for experimentation but not as the source of truth.
+* Archive firmware with its QMK source revisions and build information.
 * Primary preference is 60% layouts with Caps-based navigation.
 
 ## Base Layout
@@ -76,9 +79,21 @@ Layer 3: Settings
 │   ▽   │   ▽   │   ▽   │                ▽                │   ▽   │   ▽   │   ▽   │   ▽   │
 └───────┴───────┴───────┴─────────────────────────────────┴───────┴───────┴───────┴───────┘
 ```
-* fn1 = Caps Lock
-* fn2 = Menu/F13/Split Shift/Pause depending on board (ANSI 60% Shown)
 
+* fn1 = Caps Lock
+* fn2 = Menu/F13/Split Shift/Pause depending on board (ANSI 60% shown)
+
+## Source of Truth
+
+The userspace source is the authoritative keyboard configuration.
+
+VIA is available for experimentation and temporary remapping, but permanent changes should be incorporated into the userspace source.
+
+Firmware intended to be retained or flashed is built and archived with:
+
+```bash
+./build-archive.sh -kb <keyboard> -km <keymap>
+```
 
 # Setup
 
