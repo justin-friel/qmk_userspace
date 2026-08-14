@@ -107,6 +107,19 @@ strip_ansi() {
 	' "$input_path"
 }
 
+qmk_info_value() {
+	local info_output="$1"
+	local field="$2"
+
+	awk -v field="$field" '
+		index($0, field ":") == 1 {
+			sub("^[^:]*:[[:space:]]*", "", $0)
+			print
+			exit
+		}
+	' <<< "$info_output"
+}
+
 artifact_candidates_from_output() {
 	local output_path="$1"
 	local line
@@ -227,6 +240,20 @@ QMK_FIRMWARE_ORIGIN="$(repo_origin_url "$QMK_FIRMWARE_ROOT")"
 QMK_FIRMWARE_BRANCH="$(repo_branch "$QMK_FIRMWARE_ROOT")"
 QMK_FIRMWARE_COMMIT="$(repo_commit "$QMK_FIRMWARE_ROOT")"
 
+QMK_INFO_OUTPUT="$(qmk info -kb "$keyboard" 2>&1)" || {
+	printf '%s\n' "$QMK_INFO_OUTPUT" >&2
+	fail "Unable to read QMK keyboard info for '$keyboard'"
+}
+KEYBOARD_NAME="$(qmk_info_value "$QMK_INFO_OUTPUT" "Keyboard Name")"
+KEYBOARD_MANUFACTURER="$(qmk_info_value "$QMK_INFO_OUTPUT" "Manufacturer")"
+KEYBOARD_MAINTAINER="$(qmk_info_value "$QMK_INFO_OUTPUT" "Maintainer")"
+KEYBOARD_PROCESSOR="$(qmk_info_value "$QMK_INFO_OUTPUT" "Processor")"
+KEYBOARD_BOOTLOADER="$(qmk_info_value "$QMK_INFO_OUTPUT" "Bootloader")"
+
+if [[ -z "$KEYBOARD_NAME" || -z "$KEYBOARD_MANUFACTURER" || -z "$KEYBOARD_MAINTAINER" || -z "$KEYBOARD_PROCESSOR" || -z "$KEYBOARD_BOOTLOADER" ]]; then
+	fail "QMK keyboard info for '$keyboard' is missing required metadata"
+fi
+
 BUILD_STARTED_EPOCH="$(date +%s)"
 BUILD_STARTED_ISO="$(date -d "@$BUILD_STARTED_EPOCH" +"%Y-%m-%dT%H:%M:%S%:z")"
 BUILD_START_DIR="$(date -d "@$BUILD_STARTED_EPOCH" +"%Y-%m-%dT%H-%M-%S%z")"
@@ -273,6 +300,11 @@ INFO_PATH="${ARCHIVE_DIR}/info.txt"
 
 {
 	printf 'Keyboard: %s\n' "$keyboard"
+	printf 'Keyboard Name: %s\n' "$KEYBOARD_NAME"
+	printf 'Manufacturer: %s\n' "$KEYBOARD_MANUFACTURER"
+	printf 'Maintainer: %s\n' "$KEYBOARD_MAINTAINER"
+	printf 'Processor: %s\n' "$KEYBOARD_PROCESSOR"
+	printf 'Bootloader: %s\n' "$KEYBOARD_BOOTLOADER"
 	printf 'Keymap: %s\n\n' "$keymap"
 	printf 'Build started: %s\n' "$BUILD_STARTED_ISO"
 	printf 'Build finished: %s\n\n' "$BUILD_FINISHED_ISO"
