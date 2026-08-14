@@ -41,6 +41,17 @@ require_clean_repo() {
 	fi
 }
 
+require_clean_userspace_repo() {
+	local repo_path="$1"
+	local status
+
+	status="$(git -C "$repo_path" status --porcelain --untracked-files=normal -- . ':(exclude)firmware/**')"
+	if [[ -n "$status" ]]; then
+		printf '%s\n' "$status" >&2
+		fail "qmk_userspace has tracked or untracked source changes: $repo_path"
+	fi
+}
+
 repo_origin_url() {
 	local repo_path="$1"
 
@@ -205,7 +216,7 @@ fi
 
 require_git_repo "$QMK_USERSPACE_ROOT" "qmk_userspace"
 require_git_repo "$QMK_FIRMWARE_ROOT" "qmk_firmware"
-require_clean_repo "$QMK_USERSPACE_ROOT" "qmk_userspace"
+require_clean_userspace_repo "$QMK_USERSPACE_ROOT"
 require_clean_repo "$QMK_FIRMWARE_ROOT" "qmk_firmware"
 
 QMK_USERSPACE_ORIGIN="$(repo_origin_url "$QMK_USERSPACE_ROOT")"
@@ -254,7 +265,7 @@ if [[ -e "$ARCHIVE_DIR" ]]; then
 fi
 
 mkdir -p "$ARCHIVE_DIR"
-cp -- "$ARTIFACT_PATH" "$ARCHIVED_PATH"
+mv -- "$ARTIFACT_PATH" "$ARCHIVED_PATH"
 
 FIRMWARE_SHA="$(sha256sum "$ARCHIVED_PATH" | awk '{print $1}')"
 FIRMWARE_SIZE="$(stat -c '%s' "$ARCHIVED_PATH")"
