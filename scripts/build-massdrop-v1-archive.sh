@@ -168,15 +168,33 @@ find_build_artifacts() {
 }
 
 archive_build() {
-	archive_firmware \
-		"$QMK_USERSPACE_ROOT" \
-		"$keyboard" \
-		"$keymap" \
-		"$QMK_FIRMWARE_ROOT" \
-		"$BUILD_STARTED_ISO" \
-		"$BUILD_FINISHED_ISO" \
-		"$BUILD_OUTPUT_FILE" \
+	# This build uses the historical Massdrop QMK tree directly.
+	# qmk_userspace is only the archive destination; it is not a build source.
+	ARCHIVE_USERSPACE_ROOT="$QMK_USERSPACE_ROOT"
+
+	ARCHIVE_KEYBOARD="$keyboard"
+	ARCHIVE_KEYMAP="$keymap"
+
+	# Populate metadata that is known for the current Massdrop target.
+	# Leave unknown fields blank rather than omitting them from info.txt.
+	ARCHIVE_KEYBOARD_NAME=""
+	ARCHIVE_MANUFACTURER="Massdrop"
+	ARCHIVE_MAINTAINER=""
+	ARCHIVE_PROCESSOR=""
+	ARCHIVE_BOOTLOADER=""
+
+	ARCHIVE_BUILD_STARTED="$BUILD_STARTED_ISO"
+	ARCHIVE_BUILD_FINISHED="$BUILD_FINISHED_ISO"
+	ARCHIVE_BUILD_OUTPUT_FILE="$BUILD_OUTPUT_FILE"
+
+	ARCHIVE_USERSPACE_REPO=""
+	ARCHIVE_FIRMWARE_REPO="$QMK_FIRMWARE_ROOT"
+
+	ARCHIVE_ARTIFACT_PATHS=(
 		"${ARTIFACT_PATHS[@]}"
+	)
+
+	archive_firmware
 }
 
 cleanup() {
