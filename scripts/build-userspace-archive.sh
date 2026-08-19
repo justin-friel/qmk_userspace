@@ -249,8 +249,17 @@ validate_environment() {
 	require_git_repo "$QMK_FIRMWARE_ROOT" "qmk_firmware"
 
 	require_clean_userspace_repo "$QMK_USERSPACE_ROOT"
-	require_clean_repo "$QMK_FIRMWARE_ROOT" "qmk_firmware"
-}
+	# Switching between QMK lineages can leave untracked submodule directories
+    # behind. Tracked source changes are unsafe, but untracked lineage residue
+    # should not prevent a build.
+    local tracked_status
+    tracked_status="$(git -C "$QMK_FIRMWARE_ROOT" status --porcelain --untracked-files=no)"
+
+    if [[ -n "$tracked_status" ]]; then
+        printf '%s\n' "$tracked_status" >&2
+        fail "qmk_firmware has tracked changes: $QMK_FIRMWARE_ROOT"
+    fi
+    }
 
 
 # Collect keyboard metadata from modern QMK.
