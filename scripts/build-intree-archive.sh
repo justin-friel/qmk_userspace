@@ -138,7 +138,7 @@ build_firmware() {
 	# -fcommon is required when compiling this historical source with the
 	# current GCC toolchain.
 	if ! "$RUN_CONTAINER" sh -lc \
-		"PATH=/home/qmk/.local/share/qmk/bin:\$PATH make -C /home/qmk/src/qmk/qmk_firmware '$target' EXTRAFLAGS=-fcommon" \
+		"PATH=/home/qmk/.local/share/qmk/bin:\$PATH make -C /home/qmk/src/qmk/qmk_firmware '$target' EXTRAFLAGS=-fcommon NO_COLOR= OK_COLOR= ERROR_COLOR= WARN_COLOR= BOLD=" \
 		2>&1 | tee "$BUILD_OUTPUT_FILE"; then
 		fail "In-tree QMK build failed for keyboard '$keyboard' keymap '$keymap'"
 	fi
