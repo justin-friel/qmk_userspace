@@ -229,23 +229,41 @@ archive_firmware() {
 		} >> "$info_path"
 	done
 
-	# Record qmk_userspace provenance when userspace participated in the build.
+	# Always write the qmk_userspace provenance section so info.txt keeps
+	# a consistent schema. Leave the fields blank when userspace did not
+	# participate in the build.
+	printf 'qmk_userspace:\n' >> "$info_path"
+
 	if [[ -n "$ARCHIVE_USERSPACE_REPO" ]]; then
 		{
-			printf 'qmk_userspace:\n'
 			printf '\tRepository: %s\n' "$(archive_repo_origin_url "$ARCHIVE_USERSPACE_REPO")"
 			printf '\tBranch: %s\n' "$(archive_repo_branch "$ARCHIVE_USERSPACE_REPO")"
 			printf '\tCommit: %s\n\n' "$(archive_repo_commit "$ARCHIVE_USERSPACE_REPO")"
 		} >> "$info_path"
+	else
+		{
+			printf '\tRepository: \n'
+			printf '\tBranch: \n'
+			printf '\tCommit: \n\n'
+		} >> "$info_path"
 	fi
 
-	# qmk_firmware participates in both modern userspace and Massdrop v1 builds.
+	# Always write the qmk_firmware provenance section so info.txt keeps
+	# a consistent schema. Leave the fields blank if firmware source
+	# provenance is unavailable.
+	printf 'qmk_firmware:\n' >> "$info_path"
+
 	if [[ -n "$ARCHIVE_FIRMWARE_REPO" ]]; then
 		{
-			printf 'qmk_firmware:\n'
 			printf '\tRepository: %s\n' "$(archive_repo_origin_url "$ARCHIVE_FIRMWARE_REPO")"
 			printf '\tBranch: %s\n' "$(archive_repo_branch "$ARCHIVE_FIRMWARE_REPO")"
 			printf '\tCommit: %s\n\n' "$(archive_repo_commit "$ARCHIVE_FIRMWARE_REPO")"
+		} >> "$info_path"
+	else
+		{
+			printf '\tRepository: \n'
+			printf '\tBranch: \n'
+			printf '\tCommit: \n\n'
 		} >> "$info_path"
 	fi
 

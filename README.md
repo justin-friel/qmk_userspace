@@ -89,11 +89,13 @@ The userspace source is the authoritative keyboard configuration.
 
 VIA is available for experimentation and temporary remapping, but permanent changes should be incorporated into the userspace source.
 
-Firmware intended to be retained or flashed is built and archived with:
+Firmware intended to be retained is built and archived with:
 
 ```bash
-./build-archive.sh -kb <keyboard> -km <keymap>
+./scripts/build-userspace-archive.sh -kb <keyboard> -km <keymap>
 ```
+
+Flashing is a separate, manual operation.
 
 # Setup
 

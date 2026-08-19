@@ -853,35 +853,35 @@ Normal QMK compilation remains available:
 qmk compile -kb dz60 -km justin
 ```
 
-However, firmware intended to be retained or flashed should normally be built with:
+Firmware intended to be retained should normally be built with:
 
 ```bash
-./build-archive.sh -kb dz60 -km justin
+./scripts/build-userspace-archive.sh -kb dz60 -km justin
 ```
 
 For verbose QMK output:
 
 ```bash
-./build-archive.sh -v -kb dz60 -km justin
+./scripts/build-userspace-archive.sh -v -kb dz60 -km justin
 ```
 
-`build-archive.sh` is a thin wrapper around QMK compilation. QMK remains responsible for the actual build.
+`build-userspace-archive.sh` builds with `qmk compile` and archives the
+resulting firmware. It does not flash the keyboard.
 
 The wrapper:
 
 - verifies the source repositories before building
 - determines `qmk_userspace` from its own Git repository
 - determines `qmk_firmware` from `qmk config user.qmk_home`
-- records the exact `qmk_userspace` Git branch and commit
-- records the exact `qmk_firmware` Git branch and commit
+- records sanitized `qmk_userspace` and `qmk_firmware` repository names,
+  branches, and commits
 - obtains keyboard information from `qmk info -kb`
 - records the exact build start and finish time
 - invokes `qmk compile`
 - displays QMK output normally during the build
 - captures the QMK build output
-- strips terminal escape sequences from the stored copy
 - identifies the resulting `.hex` or `.bin`
-- moves the userspace-root build artifact into the firmware archive
+- copies the userspace-root build artifact into the firmware archive
 - records the file size and SHA-256 digest
 - stores the complete build output in `info.txt`
 
@@ -923,9 +923,9 @@ Keymap: justin
 Build started: ...
 Build finished: ...
 
-Firmware:
+Firmware artifacts:
 	Filename: dz60_justin.hex
-	File size: ...
+	Size: ...
 	SHA-256: ...
 
 qmk_userspace:
@@ -977,7 +977,9 @@ The root-level userspace artifacts are generated files and are ignored by Git:
 /*.bin
 ```
 
-After a successful archived build, `build-archive.sh` moves the userspace-root artifact into the appropriate `firmware/` archive directory.
+After a successful archived build, `build-userspace-archive.sh` removes the
+temporary userspace-root artifact after it has been copied into the appropriate
+`firmware/` archive directory.
 
 The copies inside:
 
