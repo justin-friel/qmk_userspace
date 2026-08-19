@@ -167,6 +167,61 @@ find_build_artifacts() {
 	done
 }
 
+# Read a simple string field from the keyboard's info.json.
+massdrop_info_json_value() {
+	local keyboard_path="$1"
+	local field="$2"
+
+	sed -nE \
+		's/^[[:space:]]*"'"$field"'"[[:space:]]*:[[:space:]]*"([^"]*)".*/\1/p' \
+		"$keyboard_path/info.json" |
+		head -1
+}
+
+
+# Read a quoted #define value from the keyboard's config.h.
+massdrop_config_value() {
+	local keyboard_path="$1"
+	local field="$2"
+
+	sed -nE \
+		's/^[[:space:]]*#define[[:space:]]+'"$field"'[[:space:]]+"([^"]*)".*/\1/p' \
+		"$keyboard_path/config.h" |
+		head -1
+}
+
+read_keyboard_metadata() {
+	local keyboard_path
+
+	keyboard_path="$QMK_FIRMWARE_ROOT/keyboards/$keyboard"
+
+	if [[ ! -d "$keyboard_path" ]]; then
+		fail "Keyboard directory does not exist: $keyboard_path"
+	fi
+
+	KEYBOARD_NAME="$(massdrop_info_json_value "$keyboard_path" "keyboard_name")"
+	KEYBOARD_MANUFACTURER="$(massdrop_config_value "$keyboard_path" "MANUFACTURER")"
+	KEYBOARD_MAINTAINER="$(massdrop_info_json_value "$keyboard_path" "maintainer")"
+	KEYBOARD_PROCESSOR="$(massdrop_rules_value "$keyboard_path" "ARM_ATSAM")"
+
+	# Legacy Massdrop v1 boards use the Massdrop SAM-BA bootloader
+	# and are flashed with mdloader.
+	KEYBOARD_BOOTLOADER="SAM-BA / mdloader"
+}
+
+# Read a Make variable from the keyboard's rules.mk.
+massdrop_rules_value() {
+	local keyboard_path="$1"
+	local field="$2"
+
+	awk -v field="$field" '
+		$1 == field && $2 == "=" {
+			print $3
+			exit
+		}
+	' "$keyboard_path/rules.mk"
+}
+
 archive_build() {
 	# This build uses the historical Massdrop QMK tree directly.
 	# qmk_userspace is only the archive destination; it is not a build source.
@@ -229,6 +284,7 @@ main() {
 	trap cleanup EXIT
 
 	validate_environment
+    read_keyboard_metadata
 	build_firmware
 	find_build_artifacts
 	archive_build
