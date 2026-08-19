@@ -1,0 +1,57 @@
+Keyboard: massdrop/ctrl
+Keyboard Name: CTRL
+Manufacturer: Massdrop Inc.
+Maintainer: Drop / Massdrop
+Processor: SAMD51J18A
+Bootloader: SAM-BA / mdloader
+Keymap: justin
+
+Build started: 2026-08-18T22:51:21-05:00
+Build finished: 2026-08-18T22:51:22-05:00
+
+Firmware artifacts:
+	Filename: massdrop_ctrl_justin.bin
+	Size: 45328
+	SHA-256: edad479a99d6cafcf998c064e21f61fb194cc038d65fc686d1bfc97826dadcfe
+
+	Filename: massdrop_ctrl_justin.hex
+	Size: 127532
+	SHA-256: 6ef467e200f6e610261c0ea6627b5581eb84c0a37393ec72c38ba25ee55c6dfd
+
+	Filename: massdrop_ctrl_justin.elf
+	Size: 615244
+	SHA-256: 62faede099f0bfb045f59e575bde4526d8cc602eb4a5ddf2cac55b96c9486046
+
+	Filename: massdrop_ctrl_justin.map
+	Size: 437205
+	SHA-256: e1ad741aebdc58429e7fb0016442ef11678481c743ccae57c7f461d9db3bbfde
+
+qmk_firmware:
+	Repository: rpi5-srv:/srv/git/qmk/qmk_firmware.git
+	Branch: massdrop-ctrl-v1
+	Commit: f76c134edb87da80772c6e70bb12aa1c34b0131a
+
+Build output:
+--------------------------------------------------------------------------------
+make: Entering directory '/home/qmk/src/qmk/qmk_firmware'
+QMK Firmware Carina_Prerelease_v0.9
+Making massdrop/ctrl with keymap justin
+
+make[1]: Entering directory '/home/qmk/src/qmk/qmk_firmware'
+arm-none-eabi-gcc (crosstool-NG 1.27.0.82_7f9d704 - qmk/qmk_toolchains @ a55a2b0) 15.2.0
+Copyright (C) 2025 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+Size before:
+   text	   data	    bss	    dec	    hex	filename
+      0	  45328	      0	  45328	   b110	.build/massdrop_ctrl_justin.hex
+
+Compiling: tmk_core/protocol/arm_atsam/raw_handler.c                                                [OK]      
+Linking: .build/massdrop_ctrl_justin.elf                                                            [OK]      
+Creating load file for flashing: .build/massdrop_ctrl_justin.hex                                    [OK]      
+Copying massdrop_ctrl_justin.bin to qmk_firmware folder                                             [OK]      
+(Firmware size check does not yet support cortex-m4 microprocessors; skipping.)
+make[1]: Leaving directory '/home/qmk/src/qmk/qmk_firmware'
+make: Leaving directory '/home/qmk/src/qmk/qmk_firmware'
+--------------------------------------------------------------------------------
