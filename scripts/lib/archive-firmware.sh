@@ -44,13 +44,21 @@ archive_fail() {
 	return 1
 }
 
-
-# Return the configured origin URL for a Git repository.
-# Repositories without an origin are recorded as N/A.
-archive_repo_origin_url() {
+# Return the full configured origin URL for console output.
+archive_repo_origin_full() {
 	local repo_path="$1"
 
 	git -C "$repo_path" remote get-url origin 2>/dev/null || printf 'N/A'
+}
+
+# Return the repository name from the configured origin URL.
+# Strip the server/path prefix and optional .git suffix so internal
+# Git infrastructure is never written to the firmware archive.
+archive_repo_origin_url() {
+	local repo_path="$1"
+
+	git -C "$repo_path" remote get-url origin 2>/dev/null |
+		sed -E 's#^.*/##; s#^.*:##; s#\.git$##'
 }
 
 
@@ -251,6 +259,20 @@ archive_firmware() {
 			cat "$ARCHIVE_BUILD_OUTPUT_FILE"
 			printf '%s\n' '--------------------------------------------------------------------------------'
 		} >> "$info_path"
+	fi
+
+    # Print the full configured Git origins for console visibility.
+	# These full paths/URLs are not written to info.txt.
+	if [[ -n "$ARCHIVE_USERSPACE_REPO" ]]; then
+		printf 'qmk_userspace: %s\n' "$(archive_repo_origin_full "$ARCHIVE_USERSPACE_REPO")"
+	else
+		printf 'qmk_userspace: \n'
+	fi
+
+	if [[ -n "$ARCHIVE_FIRMWARE_REPO" ]]; then
+		printf 'qmk_firmware: %s\n' "$(archive_repo_origin_full "$ARCHIVE_FIRMWARE_REPO")"
+	else
+		printf 'qmk_firmware: \n'
 	fi
 
 	printf 'Archive directory: %s\n' "$archive_dir"
