@@ -230,18 +230,19 @@ archive_build() {
 	ARCHIVE_KEYBOARD="$keyboard"
 	ARCHIVE_KEYMAP="$keymap"
 
-	# Populate metadata that is known for the current Massdrop target.
-	# Leave unknown fields blank rather than omitting them from info.txt.
-	ARCHIVE_KEYBOARD_NAME=""
-	ARCHIVE_MANUFACTURER="Massdrop"
-	ARCHIVE_MAINTAINER=""
-	ARCHIVE_PROCESSOR=""
-	ARCHIVE_BOOTLOADER=""
+	# Pass metadata discovered from info.json, config.h, and rules.mk
+	# into the shared archive library.
+	ARCHIVE_KEYBOARD_NAME="$KEYBOARD_NAME"
+	ARCHIVE_MANUFACTURER="$KEYBOARD_MANUFACTURER"
+	ARCHIVE_MAINTAINER="$KEYBOARD_MAINTAINER"
+	ARCHIVE_PROCESSOR="$KEYBOARD_PROCESSOR"
+	ARCHIVE_BOOTLOADER="$KEYBOARD_BOOTLOADER"
 
 	ARCHIVE_BUILD_STARTED="$BUILD_STARTED_ISO"
 	ARCHIVE_BUILD_FINISHED="$BUILD_FINISHED_ISO"
 	ARCHIVE_BUILD_OUTPUT_FILE="$BUILD_OUTPUT_FILE"
 
+	# Massdrop v1 does not use external qmk_userspace as build source.
 	ARCHIVE_USERSPACE_REPO=""
 	ARCHIVE_FIRMWARE_REPO="$QMK_FIRMWARE_ROOT"
 
