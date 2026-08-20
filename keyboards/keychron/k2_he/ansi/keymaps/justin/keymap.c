@@ -99,7 +99,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______,  _______,  _______,  _______, _______,   _______,   _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,            _______,
         _______,  _______,  _______,  _______, _______,   _______,   _______,  _______,  _______,  _______,  _______,  _______,            _______,            _______,
         _______,            _______,  _______, _______,   _______,   _______,  _______,  _______,  _______,  _______,  _______,            _______,  _______,  _______,
-        _______,  KC_LALT,  KC_LGUI,                                 _______,                                KC_RGUI,  _______,   _______,  _______,  _______,  _______
+        _______,  KC_LALT,  KC_LGUI,                                 _______,                                KC_RGUI,  _______,  _______,  _______,  _______,  _______
     ),
 
      [_NAV] = LAYOUT_ansi_84(
@@ -112,36 +112,40 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 
      [_SETTINGS] = LAYOUT_ansi_84(
-        QK_BOOT,  PROF1,    PROF2,    PROF3,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,   _______,
-        _______,  BT_HST1,  BT_HST2,  BT_HST3,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,
-        _______,  _______,  P2P4G,    _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______, _______,  _______,            _______,
+        QK_BOOT,  PROF1,    PROF2,    PROF3,    _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,
+        _______,  BT_HST1,  BT_HST2,  BT_HST3,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,            _______,
+        _______,  _______,  P2P4G,    _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,            _______,
         KC_CAPS,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,            _______,            _______,
         _______,            _______,  _______,  _______,  _______,  BAT_LVL,  NK_TOGG,	_______,  _______,  _______,  _______,            _______,  _______,  _______,
         _______,  _______,  _______,                                _______,                                _______,  _______,  _______,  _______,  _______,  _______
     )
 };
 /*
- * Use the K2 HE's physical Win/Mac switch to select our default OS layer.
- *
- * Keychron's dip_switch_update_kb() handles this switch first using the
- * stock keymap's layer numbers, then calls dip_switch_update_user().
- * Override that result here so the switch selects the layers defined by
- * our userspace:
- *
- *     Win -> _ANSI
- *     Mac -> _MAC
- *
- * _MAC is a sparse overlay; transparent keys fall through to _ANSI.
- */
-bool dip_switch_update_user(uint8_t index, bool active) {
-	if (index == 0) {
-        /*
-            QMK represents active layers as a bitmask. 1UL is the C
-		    literal for an unsigned long with value 1. Shifting it by
-		    the layer number sets that layer's bit in the mask.
-		 */
-		default_layer_set(1UL << (active ? _ANSI : _MAC));
+	Translate Keychron's stock Win/Mac default-layer selection into the
+	layer numbering used by this userspace.
+
+	Keychron's K2 HE board code sets:
+	    layer 0 -> Mac
+	    layer 2 -> Windows
+
+	Our userspace uses:
+	    _ANSI -> Windows/Linux
+	    _MAC  -> macOS
+
+	default_layer_state_set_user() is called by Keychron's
+	default_layer_state_set_kb(), so we can translate the vendor's
+	default-layer choice without modifying the Keychron source tree.
+*/
+layer_state_t default_layer_state_set_user(layer_state_t state) {
+	uint8_t layer = get_highest_layer(state);
+
+	if (layer == 0) {
+		return 1UL << _MAC;
 	}
 
-	return true;
+	if (layer == 2) {
+		return 1UL << _ANSI;
+	}
+
+	return state;
 }

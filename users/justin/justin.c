@@ -73,7 +73,7 @@ bool process_record_user_justin(uint16_t keycode, keyrecord_t *record) {
 
 	Different keyboards select the macOS layer in different ways:
 
-	    Using TO(_MAC):
+		Using TO(_MAC):
 	        _MAC is enabled through the normal QMK layer state.
 
 	    Keychron:
