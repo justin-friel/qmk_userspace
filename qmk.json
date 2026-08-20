@@ -1,6 +1,7 @@
 {
     "userspace_version": "1.1",
     "build_targets": [
-        ["dz60", "justin"]
+        ["dz60", "justin"],
+        ["keychron/k2_he/ansi", "justin"]
     ]
 }
