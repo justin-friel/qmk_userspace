@@ -85,8 +85,8 @@ bool process_record_user_justin(uint16_t keycode, keyrecord_t *record) {
 */
 static bool is_mac_mode(void) {
 	/*
-		1UL is an unsigned long with value 1. Shifting it by _MAC creates the
-		bitmask for the _MAC layer.
+		1UL is an unsigned long with value 1. Shifting it by MAC_LAYER creates
+		the bitmask for the layer configured as macOS mode.
 	*/
-	return ((layer_state | default_layer_state) & (1UL << _MAC)) != 0;
+	return ((layer_state | default_layer_state) & (1UL << MAC_LAYER)) != 0;
 }
