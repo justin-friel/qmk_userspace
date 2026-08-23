@@ -9,6 +9,10 @@ enum layers {
 	_SETTINGS
 };
 
+#ifndef MAC_LAYER
+#	define MAC_LAYER _MAC
+#endif
+
 enum custom_keycodes {
 	OS_APP = SAFE_RANGE,
 	OS_PS,
