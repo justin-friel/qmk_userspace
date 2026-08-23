@@ -1,0 +1,49 @@
+Keyboard: dz60
+Keyboard Name: DZ60
+Manufacturer: KBDFans
+Maintainer: QMK Community
+Processor: atmega32u4
+Bootloader: atmel-dfu
+Keymap: justin
+
+Build started: 2026-08-14T05:19:18-05:00
+Build finished: 2026-08-14T05:19:19-05:00
+
+Firmware:
+	Filename: dz60_justin.hex
+	Size: 72030
+	SHA-256: 5623d4a45d67fa365863af052a4a574059bdc798c14f22404889be5bdbf5817b
+
+qmk_userspace:
+	Repository: https://github.com/justin-friel/qmk_userspace.git
+	Branch: justin-userspace
+	Commit: fc26f489e5c3350665984c1be405228dd1db998f
+
+qmk_firmware:
+	Repository: https://github.com/justin-friel/qmk_firmware.git
+	Branch: justin-userspace
+	Commit: 582efe4af10ee89a692d77d0d69e79a5dc1f5df3
+
+Build output:
+--------------------------------------------------------------------------------
+Ψ Compiling keymap with gmake -r -R -f builddefs/build_keyboard.mk KEYBOARD=dz60 KEYMAP=justin KEYBOARD_FILESAFE=dz60 TARGET=dz60_justin VERBOSE=false COLOR=true SILENT=false QMK_BIN="qmk" QMK_USERSPACE=/home/justin/src/qmk/qmk_userspace MAIN_KEYMAP_PATH_1=/home/justin/src/qmk/qmk_userspace/keyboards/dz60/keymaps/justin MAIN_KEYMAP_PATH_2=/home/justin/src/qmk/qmk_userspace/keyboards/dz60/keymaps/justin MAIN_KEYMAP_PATH_3=/home/justin/src/qmk/qmk_userspace/keyboards/dz60/keymaps/justin MAIN_KEYMAP_PATH_4=/home/justin/src/qmk/qmk_userspace/keyboards/dz60/keymaps/justin MAIN_KEYMAP_PATH_5=/home/justin/src/qmk/qmk_userspace/keyboards/dz60/keymaps/justin
+
+
+avr-gcc (crosstool-NG 1.27.0.82_7f9d704 - qmk/qmk_toolchains @ a55a2b0) 15.2.0
+Copyright (C) 2025 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+Size before:
+   text	   data	    bss	    dec	    hex	filename
+      0	  25602	      0	  25602	   6402	dz60_justin.hex
+
+Compiling: quantum/keymap_introspection.c                                                           [OK]
+Compiling: quantum/via.c                                                                            [OK]
+Linking: .build/dz60_justin.elf                                                                     [OK]
+Creating load file for flashing: .build/dz60_justin.hex                                             [OK]
+Copying dz60_justin.hex to qmk_firmware folder                                                      [OK]
+Copying dz60_justin.hex to userspace folder                                                         [OK]
+Checking file size of dz60_justin.hex                                                               [OK]
+ * The firmware size is fine - 25602/28672 (89%, 3070 bytes free)
+--------------------------------------------------------------------------------
