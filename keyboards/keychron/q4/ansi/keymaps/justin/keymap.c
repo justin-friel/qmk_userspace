@@ -17,6 +17,14 @@
 #include QMK_KEYBOARD_H
 #include "justin.h"
 
+enum layers_keychron {
+	MAC_BASE,
+	WIN_BASE,
+	NAV_FN,
+	SET_FN,
+	OTHER_FN
+};
+
 // clang-format off
 
 /*

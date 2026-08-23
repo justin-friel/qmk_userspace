@@ -9,18 +9,6 @@ enum layers {
 	_SETTINGS
 };
 
-// TODO: Move this enum to keyboards/keychron/q4/ansi/keymaps/justin/justin.hß
-/*
-The Keychron Q4 will not build without this.
-enum layers_keychron {
-	MAC_BASE,
-	WIN_BASE,
-	NAV_FN,
-	SET_FN,
-	OTHER_FN
-};
-*/
-
 #ifndef MAC_LAYER
 #	define MAC_LAYER _MAC
 #endif
