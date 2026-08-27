@@ -70,9 +70,9 @@ Layer 3: Settings
 ┌─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬───────────┐
 │Boot │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │   EE_CLR  │
 ├─────┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬────────┤
-│    ▽   │  ▽  │  ▽  │  ▽  │RTOG │RNXT │RVAL │RHUE │RSAT │RSPD │  ▽  │  ▽  │  ▽  │   ▽    │
+│    ▽   │  ▽  │  ▽  │  ▽  │RTOG │RNXT │RHUEU│RSATU│RVALU│RSPDU│  ▽  │  ▽  │  ▽  │   ▽    │
 ├────────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴────────┤
-│  Caps   │Ansi │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │      ▽      │
+│  Caps   │Ansi │  ▽  │  ▽  │  ▽  │RPRV │RHUED│RSATD│RVALD│RSPDD│  ▽  │  ▽  │      ▽      │
 ├─────────┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴─────────────┤
 │     ▽      │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │ NKRO│ Mac │  ▽  │  ▽  │  ▽  │       ▽        │
 ├───────┬────┴──┬──┴────┬┴─────┴─────┴─────┴─────┴─────┴──┬──┴────┬┴─────┴┬───────┬───────┤
@@ -96,6 +96,29 @@ Firmware intended to be retained is built and archived with:
 ```
 
 Flashing is a separate, manual operation.
+
+## RGB Key Locations
+The established layout for RGB keys should be the same across boards, regardless of whether the board uses RGB Matrix or underglow as it's implementation.
+
+|Key	|Function		    |Matrix		|Underglow	|Legacy Massdrop
+|:---	|:---			    |:---		|:---		|:---
+|R	    |TOGGLE			    |RM_TOGG	|UG_TOGG	|RGB_TOG
+|T	    |MODE_NEXT		    |RM_NEXT	|UG_NEXT	|RGB_MOD
+|Y	    |HUE_UP			    |RM_HUEU	|UG_HUEU	|RGB_HUI
+|U	    |SATURATION_UP	    |RM_SATU	|UG_SATU	|RGB_SAI
+|I	    |VALUE_UP		    |RM_VALU	|UG_VALU	|RGB_VAI
+|O	    |SPEED_UP		    |RM_SPDU	|UG_SPDU	|RGB_SPI
+|G	    |MODE_PREV		    |RM_PREV	|UG_PREV	|RGB_RMOD
+|H	    |HUE_DOWN		    |RM_HUED	|UG_HUED	|RGB_HUD
+|J	    |SATURATION_DOWN	|RM_SATD	|UG_SATD	|RGB_SAD
+|K	    |VALUE_DOWN		    |RM_VALD	|UG_VALD	|RGB_VAD
+|L	    |SPEED_DOWN		    |RM_SPDD	|UG_SPDD	|RGB_SPD
+
+There is no defined mapping for the following RGB matrix keycodes yet.
+``` 
+RM_FLGN = QK_RGB_MATRIX_FLAG_NEXT
+RM_FLGP = QK_RGB_MATRIX_FLAG_PREVIOUS
+```
 
 # Setup
 
