@@ -41,20 +41,6 @@ _NAV
 │   ▽   │   ▽   │   ▽   │                ▽                │   ▽   │ OS_APP│   ▽   │   ▽   │
 └───────┴───────┴───────┴─────────────────────────────────┴───────┴───────┴───────┴───────┘
 
-
-
-
-Key	Function		Matrix		Underglow	Legacy Massdrop CTRL
-R	TOGGLE			RM_TOGG		UG_TOGG		RGB_TOG
-T	MODE_NEXT		RM_NEXT		UG_NEXT		RGB_MOD
-Y	HUE_UP			RM_HUEU		UG_HUEU		RGB_HUI
-U	SATURATION_UP	RM_SATU 	UG_SATU		RGB_SAI
-I	VALUE_UP		RM_VALU 	UG_VALU		RGB_VAI
-O	SPEED_UP		RM_SPDU		UG_SPDU		RGB_SPI
-
-RM_FLGN = QK_RGB_MATRIX_FLAG_NEXT,
-RM_FLGP = QK_RGB_MATRIX_FLAG_PREVIOUS,
-
 _SETTINGS
 ┌─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬───────────┐
 │ Boot│  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  EE_CLR   │
@@ -75,7 +61,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 		KC_TAB,		KC_Q,		KC_W,		KC_E,		KC_R,		KC_T,		KC_Y,		KC_U,		KC_I,		KC_O,		KC_P,		KC_LBRC,	KC_RBRC,				KC_BSLS,
 		MO(_NAV),	KC_A,		KC_S,		KC_D,		KC_F,		KC_G,		KC_H,		KC_J,		KC_K,		KC_L,		KC_SCLN,	KC_QUOT,							KC_ENT,
 		KC_LSFT,				KC_Z,		KC_X,		KC_C,		KC_V,		KC_B,		KC_N,		KC_M,		KC_COMM,	KC_DOT,		KC_SLSH,				KC_RSFT,	MO(_SETTINGS),
-		KC_LCTL,	KC_LGUI,	KC_LALT,										KC_SPC,											KC_RALT,	KC_RGUI,	OS_APP,		KC_RCTL
+		KC_LCTL,	KC_LGUI,	KC_LALT,										KC_SPC,											            KC_RALT,	KC_RGUI,	OS_APP,		KC_RCTL
 	),
 
 	[_MAC] = LAYOUT_60_ansi_split_bs_rshift(
@@ -97,7 +83,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	[_SETTINGS] = LAYOUT_60_ansi_split_bs_rshift(
 		QK_BOOT,	_______,	_______,	_______,	_______,	_______,	_______,	_______,	_______,	_______,	_______,	_______,	_______,	KC_NO,		EE_CLR,
 		_______,	_______,	_______,	_______,	UG_TOGG,	UG_NEXT,	UG_HUEU,	UG_SATU,	UG_VALU,	UG_SPDU,	_______,	_______,	_______,				_______,
-		KC_CAPS,	TO(_ANSI),	_______,	_______,	_______,	UG_PREV,	UG_HUED,	UG_SATD,	UG_VALD,	UG_SPDD,	_______,	_______,							_______,
+		KC_CAPS,	TO(_ANSI),	_______,	_______,	_______,	UG_PREV,	UG_HUED,	UG_SATD,	UG_VALD,	UG_SPDD,	_______,	_______,				            _______,
 		_______,				_______,	_______,	_______,	_______,	_______,	NK_TOGG,	TO(_MAC),	_______,	_______,	_______,				_______,	_______,
 		_______,	_______,	_______,										_______,												    _______,	_______,	_______,	_______
 	)
