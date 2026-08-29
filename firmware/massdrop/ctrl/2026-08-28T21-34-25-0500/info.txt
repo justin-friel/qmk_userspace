@@ -1,0 +1,114 @@
+Keyboard: massdrop/ctrl
+Keyboard Name: CTRL
+Manufacturer: Massdrop Inc.
+Maintainer: Drop / Massdrop
+Processor: SAMD51J18A
+Bootloader: SAM-BA / mdloader
+Keymap: justin
+
+Build started: 2026-08-28T21:34:25-05:00
+Build finished: 2026-08-28T21:34:28-05:00
+
+Firmware artifacts:
+	Filename: massdrop_ctrl_justin.bin
+	Size: 45328
+	SHA-256: 92159d4d39f76d3fac66acbf83392533b7cc4e4c537c8b3ecb2bdc01b8aaca23
+
+	Filename: massdrop_ctrl_justin.hex
+	Size: 127532
+	SHA-256: 01ec92c2d4116edfc7b0faf6cafd51a4a4fa4c99d8789bc609bb4ca60d697388
+
+	Filename: massdrop_ctrl_justin.elf
+	Size: 615020
+	SHA-256: 29ae0460ecdbc05bb57aaa153b8ef33dafe8ee4c72642e59ccffa6d39eb2b86a
+
+	Filename: massdrop_ctrl_justin.map
+	Size: 436661
+	SHA-256: e25aee4dbc9dfddc586e8f75b91d275af33eed36aa12965d7c240236f69ea57b
+
+qmk_userspace:
+	Repository: 
+	Branch: 
+	Commit: 
+	Commit message: 
+
+qmk_firmware:
+	Repository: qmk_firmware
+	Branch: massdrop-justin
+	Commit: b026ff0aaa41f78244b049a1fdbfa72e50588039
+	Commit message: Added ALT and Mercury Rocketeer keyboards.  Removed comment out code and updated comments in keymap.c for CTRL.
+
+Build output:
+--------------------------------------------------------------------------------
+make: Entering directory '/home/qmk/src/qmk/qmk_firmware'
+QMK Firmware Carina_Prerelease_v0.9
+Making massdrop/ctrl with keymap justin
+
+make[1]: Entering directory '/home/qmk/src/qmk/qmk_firmware'
+arm-none-eabi-gcc (crosstool-NG 1.27.0.82_7f9d704 - qmk/qmk_toolchains @ a55a2b0) 15.2.0
+Copyright (C) 2025 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+Compiling: keyboards/massdrop/ctrl/matrix.c                                                         [OK]      
+Compiling: keyboards/massdrop/ctrl/config_led.c                                                     [OK]      
+Compiling: keyboards/massdrop/ctrl/spi.c                                                            [OK]      
+Compiling: keyboards/massdrop/ctrl/usb.c                                                            [OK]      
+Compiling: users/justin/justin.c                                                                    [OK]      
+Compiling: keyboards/massdrop/ctrl/keymaps/justin/keymap.c                                          [OK]      
+Compiling: quantum/quantum.c                                                                        [OK]      
+Compiling: quantum/keymap_common.c                                                                  [OK]      
+Compiling: quantum/keycode_config.c                                                                 [OK]      
+Compiling: quantum/debounce/sym_g.c                                                                 [OK]      
+Compiling: quantum/color.c                                                                          [OK]      
+Compiling: quantum/rgb_matrix.c                                                                     [OK]      
+Compiling: quantum/rgb_matrix_drivers.c                                                             [OK]      
+Compiling: quantum/led_tables.c                                                                     [OK]      
+Compiling: quantum/process_keycode/process_space_cadet.c                                            [OK]      
+Compiling: tmk_core/common/host.c                                                                   [OK]      
+Compiling: tmk_core/common/keyboard.c                                                               [OK]      
+Compiling: tmk_core/common/action.c                                                                 [OK]      
+Compiling: tmk_core/common/action_tapping.c                                                         [OK]      
+Compiling: tmk_core/common/action_macro.c                                                           [OK]      
+Compiling: tmk_core/common/action_layer.c                                                           [OK]      
+Compiling: tmk_core/common/action_util.c                                                            [OK]      
+Compiling: tmk_core/common/print.c                                                                  [OK]      
+Compiling: tmk_core/common/debug.c                                                                  [OK]      
+Compiling: tmk_core/common/util.c                                                                   [OK]      
+Compiling: tmk_core/common/eeconfig.c                                                               [OK]      
+Compiling: tmk_core/common/report.c                                                                 [OK]      
+Compiling: tmk_core/common/arm_atsam/suspend.c                                                      [OK]      
+Compiling: tmk_core/common/arm_atsam/timer.c                                                        [OK]      
+Compiling: tmk_core/common/arm_atsam/bootloader.c                                                   [OK]      
+Compiling: tmk_core/common/arm_atsam/printf.c                                                       [OK]      
+Compiling: tmk_core/common/arm_atsam/eeprom.c                                                       [OK]      
+Compiling: tmk_core/common/magic.c                                                                  [OK]      
+Compiling: tmk_core/protocol/arm_atsam/adc.c                                                        [OK]      
+Compiling: tmk_core/protocol/arm_atsam/clks.c                                                       [OK]      
+Compiling: tmk_core/protocol/arm_atsam/d51_util.c                                                   [OK]      
+Compiling: tmk_core/protocol/arm_atsam/i2c_master.c                                                 [OK]      
+Compiling: tmk_core/protocol/arm_atsam/led_matrix_programs.c                                        [OK]      
+Compiling: tmk_core/protocol/arm_atsam/led_matrix.c                                                 [OK]      
+Compiling: tmk_core/protocol/arm_atsam/main_arm_atsam.c                                             [OK]      
+Compiling: tmk_core/protocol/arm_atsam/power.c                                                      [OK]      
+Compiling: tmk_core/protocol/arm_atsam/raw_handler.c                                                [OK]      
+Compiling: tmk_core/protocol/arm_atsam/spi.c                                                        [OK]      
+Compiling: tmk_core/protocol/arm_atsam/startup.c                                                    [OK]      
+Compiling: tmk_core/protocol/arm_atsam/usb/main_usb.c                                               [OK]      
+Compiling: tmk_core/protocol/arm_atsam/usb/udc.c                                                    [OK]      
+Compiling: tmk_core/protocol/arm_atsam/usb/udi_cdc.c                                                [OK]      
+Compiling: tmk_core/protocol/arm_atsam/usb/udi_hid.c                                                [OK]      
+Compiling: tmk_core/protocol/arm_atsam/usb/udi_hid_kbd.c                                            [OK]      
+Compiling: tmk_core/protocol/arm_atsam/usb/udi_hid_kbd_desc.c                                       [OK]      
+Compiling: tmk_core/protocol/arm_atsam/usb/ui.c                                                     [OK]      
+Compiling: tmk_core/protocol/arm_atsam/usb/usb2422.c                                                [OK]      
+Compiling: tmk_core/protocol/arm_atsam/usb/usb.c                                                    [OK]      
+Compiling: tmk_core/protocol/arm_atsam/usb/usb_device_udd.c                                         [OK]      
+Compiling: tmk_core/protocol/arm_atsam/usb/usb_util.c                                               [OK]      
+Linking: .build/massdrop_ctrl_justin.elf                                                            [OK]      
+Creating load file for flashing: .build/massdrop_ctrl_justin.hex                                    [OK]      
+Copying massdrop_ctrl_justin.bin to qmk_firmware folder                                             [OK]      
+(Firmware size check does not yet support cortex-m4 microprocessors; skipping.)
+make[1]: Leaving directory '/home/qmk/src/qmk/qmk_firmware'
+make: Leaving directory '/home/qmk/src/qmk/qmk_firmware'
+--------------------------------------------------------------------------------
