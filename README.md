@@ -1,129 +1,8 @@
 # QMK Userspace
 
-This was created from a template repository which allows for an external set of QMK keymaps to be defined and compiled. This is useful for users who want to maintain their own keymaps without having to fork the [main QMK repository](https://github.com/qmk/qmk_firmware). You must still fork the main QMK repository if writing firmware for a *new* keyboard.
-
-For fork-specific instructions see [README-qmk-external-userspace-setup.md](docs/README-qmk-external-userspace-setup.md)
-
-## Goals
-
-* Maintain a large number of keyboards.
-* Keep personal keymaps separate from QMK firmware.
-* Keep references to specific forks and commits for nonstandard boards (Massdrop, Keychron).
-* Standardize on a modern QMK External Userspace workflow.
-* Use a universal layout philosophy across boards.
-* Prefer one shared source of truth.
-* Use shared layouts when multiple keyboards expose a compatible physical layout.
-* Support ANSI and Mac modes.
-* Keep VIA available for experimentation but not as the source of truth.
-* Archive firmware with its QMK source revisions and build information.
-* Primary preference is 60% layouts with Caps-based navigation.
-
-## Base Layout
-
-Layer 0: ANSI / Windows / Linux Base
-
-```text
-┌─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬───────────┐
-│ Esc │  1  │  2  │  3  │  4  │  5  │  6  │  7  │  8  │  9  │  0  │  -  │  =  │ Backspace │
-├─────┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬────────┤
-│  Tab   │  Q  │  W  │  E  │  R  │  T  │  Y  │  U  │  I  │  O  │  P  │  [  │  ]  │  |\    │
-├────────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴────────┤
-│  MO(2)  │  A  │  S  │  D  │  F  │  G  │  H  │  J  │  K  │  L  │  ;  │  '  │    Enter    │
-├─────────┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴─────────────┤
-│   Shift    │  Z  │  X  │  C  │  V  │  B  │  N  │  M  │  ,  │  .  │  ?  │     Shift      │
-├───────┬────┴──┬──┴────┬┴─────┴─────┴─────┴─────┴─────┴──┬──┴────┬┴─────┴┬───────┬───────┤
-│  Ctrl │  Win  │  Alt  │              Space              │  Alt  │  Win  │ MO(3) │ Ctrl  │
-└───────┴───────┴───────┴─────────────────────────────────┴───────┴───────┴───────┴───────┘
-```
-
-Layer 1: Mac
-```text
-┌─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬───────────┐
-│  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │     ▽     │
-├─────┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬────────┤
-│    ▽   │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │   ▽    │
-├────────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴────────┤
-│    ▽    │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │      ▽      │
-├─────────┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴─────────────┤
-│     ▽      │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │       ▽        │
-├───────┬────┴──┬──┴────┬┴─────┴─────┴─────┴─────┴─────┴──┬──┴────┬┴─────┴┬───────┬───────┤
-│   ▽   │  Alt  │  Cmd  │                ▽                │  Cmd  │  Alt  │   ▽   │ Ctrl  │
-└───────┴───────┴───────┴─────────────────────────────────┴───────┴───────┴───────┴───────┘
-```
-
-Layer 2: Convenience / Caps held
-```text
-┌─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬───────────┐
-│ `~  │ F1  │ F2  │ F3  │ F4  │ F5  │ F6  │ F7  │ F8  │ F9  │ F10 │ F11 │ F12 │  Delete   │
-├─────┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬────────┤
-│    ▽   │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │ PgUp│  ↑  │ PgDn│ PtSc│ Ins │ ScLk│   ▽    │
-├────────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴────────┤
-│    ▽    │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │ Home│  ←  │  ↓  │  →  │  ▽  │  ▽  │      ▽      │
-├─────────┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴─────────────┤
-│     ▽      │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │ End │  ▽  │  ▽  │  ▽  │  ▽  │       ▽        │
-├───────┬────┴──┬──┴────┬┴─────┴─────┴─────┴─────┴─────┴──┬──┴────┬┴─────┴┬───────┬───────┤
-│   ▽   │   ▽   │   ▽   │                ▽                │   ▽   │ Menu  │   ▽   │   ▽   │
-└───────┴───────┴───────┴─────────────────────────────────┴───────┴───────┴───────┴───────┘
-```
-Layer 3: Settings
-```text
-┌─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬───────────┐
-│Boot │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │   EE_CLR  │
-├─────┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬────────┤
-│    ▽   │  ▽  │  ▽  │  ▽  │RTOG │RNXT │RHUEU│RSATU│RVALU│RSPDU│  ▽  │  ▽  │  ▽  │   ▽    │
-├────────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴────────┤
-│  Caps   │Ansi │  ▽  │  ▽  │  ▽  │RPRV │RHUED│RSATD│RVALD│RSPDD│  ▽  │  ▽  │      ▽      │
-├─────────┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴─────────────┤
-│     ▽      │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │ NKRO│ Mac │  ▽  │  ▽  │  ▽  │       ▽        │
-├───────┬────┴──┬──┴────┬┴─────┴─────┴─────┴─────┴─────┴──┬──┴────┬┴─────┴┬───────┬───────┤
-│   ▽   │   ▽   │   ▽   │                ▽                │   ▽   │   ▽   │   ▽   │   ▽   │
-└───────┴───────┴───────┴─────────────────────────────────┴───────┴───────┴───────┴───────┘
-```
-
-* fn1 = Caps Lock
-* fn2 = Menu/F13/Split Shift/Pause depending on board (ANSI 60% shown)
-
-## Source of Truth
-
-The userspace source is the authoritative keyboard configuration.
-
-VIA is available for experimentation and temporary remapping, but permanent changes should be incorporated into the userspace source.
-
-Firmware intended to be retained is built and archived with:
-
-```bash
-./scripts/build-userspace-archive.sh -kb <keyboard> -km <keymap>
-```
-
-Flashing is a separate, manual operation.
-
-## RGB Key Locations
-The established layout for RGB keys should be the same across boards, regardless of whether the board uses RGB Matrix or underglow as it's implementation.
-
-|Key	|Function		    |Matrix		|Underglow	|Legacy Massdrop
-|:---	|:---			    |:---		|:---		|:---
-|R	    |TOGGLE			    |RM_TOGG	|UG_TOGG	|RGB_TOG
-|T	    |MODE_NEXT		    |RM_NEXT	|UG_NEXT	|RGB_MOD
-|Y	    |HUE_UP			    |RM_HUEU	|UG_HUEU	|RGB_HUI
-|U	    |SATURATION_UP	    |RM_SATU	|UG_SATU	|RGB_SAI
-|I	    |VALUE_UP		    |RM_VALU	|UG_VALU	|RGB_VAI
-|O	    |SPEED_UP		    |RM_SPDU	|UG_SPDU	|RGB_SPI
-|G	    |MODE_PREV		    |RM_PREV	|UG_PREV	|RGB_RMOD
-|H	    |HUE_DOWN		    |RM_HUED	|UG_HUED	|RGB_HUD
-|J	    |SATURATION_DOWN	|RM_SATD	|UG_SATD	|RGB_SAD
-|K	    |VALUE_DOWN		    |RM_VALD	|UG_VALD	|RGB_VAD
-|L	    |SPEED_DOWN		    |RM_SPDD	|UG_SPDD	|RGB_SPD
-
-There is no defined mapping for the following RGB matrix keycodes yet.
-``` 
-RM_FLGN = QK_RGB_MATRIX_FLAG_NEXT
-RM_FLGP = QK_RGB_MATRIX_FLAG_PREVIOUS
-```
-
-# Setup
+This is a template repository which allows for an external set of QMK keymaps to be defined and compiled. This is useful for users who want to maintain their own keymaps without having to fork the [main QMK repository](https://github.com/qmk/qmk_firmware). You must still fork the main QMK repository if writing firmware for a *new* keyboard.
 
 ## Howto configure your build targets
-
 1. Run the normal `qmk setup` procedure if you haven't already done so -- see [QMK Docs](https://docs.qmk.fm/#/newbs) for details.
 1. Fork this repository
 1. Clone your fork to your local machine
@@ -148,7 +27,6 @@ RM_FLGP = QK_RGB_MATRIX_FLAG_PREVIOUS
 1. Inspect the Releases tab on your repository for the latest firmware build
 
 ## Howto build locally
-
 1. Run the normal `qmk setup` procedure if you haven't already done so -- see [QMK Docs](https://docs.qmk.fm/#/newbs) for details.
 1. Fork this repository
 1. Clone your fork to your local machine
@@ -156,7 +34,6 @@ RM_FLGP = QK_RGB_MATRIX_FLAG_PREVIOUS
 1. Set global userspace path: `qmk config user.overlay_dir="$(realpath .)"` -- you MUST be located in the cloned userspace location for this to work correctly
     * This will be automatically detected if you've `cd`ed into your userspace repository, but the above makes your userspace available regardless of your shell location.
 1. Compile normally: `qmk compile -kb your_keyboard -km your_keymap` or `make your_keyboard:your_keymap`
-
 Alternatively, if you configured your build targets above, you can use `qmk userspace-compile` to build all of your userspace targets at once.
 
 ## Extra info
@@ -169,9 +46,7 @@ To override the `build` job, you can change the following parameters to use a di
       qmk_repo: qmk/qmk_firmware
       qmk_ref: master
 ```
-
 If you wish to manually manage `qmk_firmware` using git within the userspace repository, you can add `qmk_firmware` as a submodule in the userspace directory instead. GitHub Actions will automatically use the submodule at the pinned revision if it exists, otherwise it will use the default latest revision of `qmk_firmware` from the main repository.
-
 This can also be used to control which fork is used, though only upstream `qmk_firmware` will have support for external userspace until other manufacturers update their forks.
 
 1. (First time only) `git submodule add https://github.com/qmk/qmk_firmware.git`

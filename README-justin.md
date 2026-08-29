@@ -1,21 +1,12 @@
-# QMK Userspace
-
-This repository is an external QMK userspace: a separate set of personal
-keymaps, shared code, build targets, and retained firmware archives. It can be
-used with a normal QMK environment without depending on another project.
+# QMK Userspace Conventions
 
 ## Goals
 
-* Maintain a large number of keyboards.
-* Keep personal keymaps separate from QMK firmware.
+* Keep personal keymaps separate from QMK firmware source.
+* Keep references to specific forks and commits for nonstandard boards (Massdrop, Keychron).
 * Standardize on a modern QMK External Userspace workflow.
-* Use a universal layout philosophy across boards.
-* Prefer one shared source of truth.
-* Use shared layouts when multiple keyboards expose a compatible physical layout.
-* Support ANSI and Mac modes.
-* Keep VIA available for experimentation but not as the source of truth.
-* Archive retained firmware with its QMK source revisions and build information.
-* Primary preference is 60% layouts with Caps-based navigation.
+* Use a universal layout and layers across boards.
+* Archive firmware with its QMK source revisions and build information.
 
 ## Base Layout
 
@@ -36,7 +27,6 @@ Layer 0: ANSI / Windows / Linux Base
 ```
 
 Layer 1: Mac
-
 ```text
 ┌─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬───────────┐
 │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │     ▽     │
@@ -52,7 +42,6 @@ Layer 1: Mac
 ```
 
 Layer 2: Convenience / Caps held
-
 ```text
 ┌─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬───────────┐
 │ `~  │ F1  │ F2  │ F3  │ F4  │ F5  │ F6  │ F7  │ F8  │ F9  │ F10 │ F11 │ F12 │  Delete   │
@@ -66,16 +55,14 @@ Layer 2: Convenience / Caps held
 │   ▽   │   ▽   │   ▽   │                ▽                │   ▽   │ Menu  │   ▽   │   ▽   │
 └───────┴───────┴───────┴─────────────────────────────────┴───────┴───────┴───────┴───────┘
 ```
-
 Layer 3: Settings
-
 ```text
 ┌─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬───────────┐
-│Boot │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │     ▽     │
+│Boot │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │   EE_CLR  │
 ├─────┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬────────┤
-│    ▽   │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │   ▽    │
+│    ▽   │  ▽  │  ▽  │  ▽  │RTOG │RNXT │RHUEU│RSATU│RVALU│RSPDU│  ▽  │  ▽  │  ▽  │   ▽    │
 ├────────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴────────┤
-│  Caps   │Ansi │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │      ▽      │
+│  Caps   │Ansi │  ▽  │  ▽  │  ▽  │RPRV │RHUED│RSATD│RVALD│RSPDD│  ▽  │  ▽  │      ▽      │
 ├─────────┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴─────────────┤
 │     ▽      │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │ NKRO│ Mac │  ▽  │  ▽  │  ▽  │       ▽        │
 ├───────┬────┴──┬──┴────┬┴─────┴─────┴─────┴─────┴─────┴──┬──┴────┬┴─────┴┬───────┬───────┤
@@ -86,51 +73,106 @@ Layer 3: Settings
 * fn1 = Caps Lock
 * fn2 = Menu/F13/Split Shift/Pause depending on board (ANSI 60% shown)
 
-## Source of Truth
+## Common Features
 
-The userspace source is the authoritative keyboard configuration. VIA is
-available for experimentation and temporary remapping, but permanent changes
-belong in the userspace source.
+The base keymap is based on a 60% layout. All keyboards, regardless of size, should implement the following layers and features for convenience and muscle memory.
 
-Retained firmware archives live under `firmware/<keyboard>/<build-time>/` with
-their `info.txt` build metadata. Building and flashing are separate operations.
+### Layers
 
-## Setup
+The standard keymap contains four layers:
 
-1. Set up QMK following the [QMK documentation](https://docs.qmk.fm/newbs_getting_started).
-1. Clone this repository.
-1. From its root, configure it as the external userspace:
+1. A standard ANSI layer.
+2. A Mac-compatible layer.
+3. A layer used for navigation shortcuts and keys missing from a TKL keyboard.
+4. A layer dedicated mostly to hardware controls.
 
-   ```bash
-   qmk config user.overlay_dir="$(realpath .)"
-   ```
-
-1. Verify the configuration with:
-
-   ```bash
-   qmk userspace-doctor
-   ```
-
-## Keymaps and Build Targets
-
-Add a board-specific keymap under
-`keyboards/<keyboard>/keymaps/<keymap>/`, or use a compatible shared layout
-under `layouts/`. Add a target to `qmk.json` with:
-
-```bash
-qmk userspace-add -kb <keyboard> -km <keymap>
+```c
+enum layers {
+	_ANSI,
+	_MAC,
+	_NAV,
+	_SETTINGS
+};
 ```
 
-List configured targets with `qmk userspace-list`, then build either one target
-or all configured targets:
+### Base layer
 
-```bash
-qmk compile -kb <keyboard> -km <keymap>
-qmk userspace-compile
+The default layer contains the standard alphanumeric keys and function keys for activating the different layers.
+
+- `MO(_NAV)` is in the Caps Lock position.
+- `MO(_SETTINGS)` is in the position of the Menu key, when available. It may be mapped to a different key depending on the layout.
+
+### ANSI and Mac Modes
+
+Keyboards use a dedicated ANSI layer as the default layer and a mostly transparent Mac layer with the GUI and Alt/Option keys in the appropriate positions for Apple layouts.
+
+Mac mode is toggleable on the settings layer, but not stored in EEPROM.
+
+#### Cross-Platform keycodes
+
+Custom keycodes are implemented to avoid dead keys when in Mac mode.
+
+- `OS_PS` acts as Print Screen (`KC_PSCR`) in ANSI mode and as the equivalent keyboard shortcut in Mac mode.
+- `OS_APP` is the Menu key (`KC_APP`) in ANSI mode and is the shortcut to the global menu in Mac mode.
+
+### Navigation Layer
+
+The navigation layer contains keys that are in the navigation section of a TKL keyboard. Notably:
+
+- Arrow keys (`KC_UP`, `KC_LEFT`, `KC_DOWN` and `KC_RGHT`) are at the `I`, `J`, `K`, `L` positions.
+- Page Up and Page Down (`KC_PGUP` and `KC_PGDN`) are located at `U` and `O` positions.
+- Home and End (`KC_HOME` and `KC_END`) are located at the `H` and `N` positions.
+- The Print Screen key is located at the `P` position.
+- Insert and Scroll Lock (`KC_INS` and `KC_SCRL`) are located at the `[` and `]` positions.
+- Delete (`KC_DEL`) is located at the `Backspace` position.
+- Pause/Break is not implemented, as I have never found a use for that key.
+
+### Settings Layer
+
+The settings layer contains keyboard hardware functions, the ANSI and Mac mode toggles, and a couple of keys that do not fit conveniently into the Navigation Layer.
+
+- Bootloader mode and EEPROM reset are located at `ESC` and `Backspace`.
+- ANSI and Mac mode toggles are at `A` and `M`.
+- NKRO, if available, is located at the `N` position.
+- Caps Lock is available at its standard location.
+
+#### RGB Key Locations
+
+The established layout for RGB keys should be the same across boards, regardless of whether the board uses RGB Matrix or underglow as its implementation.
+
+|Key	    |Function		    |Matrix		|Underglow	|Legacy Massdrop
+|:---	    |:---			    |:---		|:---		|:---
+|`R`	    |TOGGLE			    |RM_TOGG	|UG_TOGG	|RGB_TOG
+|`T`	    |MODE_NEXT		    |RM_NEXT	|UG_NEXT	|RGB_MOD
+|`Y`	    |HUE_UP			    |RM_HUEU	|UG_HUEU	|RGB_HUI
+|`U`	    |SATURATION_UP	    |RM_SATU	|UG_SATU	|RGB_SAI
+|`I`	    |VALUE_UP		    |RM_VALU	|UG_VALU	|RGB_VAI
+|`O`	    |SPEED_UP		    |RM_SPDU	|UG_SPDU	|RGB_SPI
+|`G`	    |MODE_PREV		    |RM_PREV	|UG_PREV	|RGB_RMOD
+|`H`	    |HUE_DOWN		    |RM_HUED	|UG_HUED	|RGB_HUD
+|`J`	    |SATURATION_DOWN	|RM_SATD	|UG_SATD	|RGB_SAD
+|`K`	    |VALUE_DOWN		    |RM_VALD	|UG_VALD	|RGB_VAD
+|`L`	    |SPEED_DOWN		    |RM_SPDD	|UG_SPDD	|RGB_SPD
+
+There is no defined mapping for the following RGB matrix keycodes yet.
+
+```
+RM_FLGN = QK_RGB_MATRIX_FLAG_NEXT
+RM_FLGP = QK_RGB_MATRIX_FLAG_PREVIOUS
 ```
 
-## Shared Userspace Code
+### VIA Compatibility
 
-The `users/` directory holds code and configuration shared by keymaps with the
-same name. Use it for common behavior while keeping board-specific physical
-layout and hardware behavior in the corresponding keyboard keymap.
+VIA compatibility is enabled by default. VIA may be used for experimentation
+and temporary remapping, but permanent keymap and configuration changes belong
+in this userspace source.
+
+## Firmware Archives
+
+Retained firmware is stored under
+`firmware/<keyboard>/<build-time>/`. Each archive includes build artifacts and
+an `info.txt` file recording build metadata, including the QMK
+userspace and QMK firmware revisions.
+
+Building, flashing, and archiving may be automated with a separate project; that automation is not required to use or
+maintain this userspace.
