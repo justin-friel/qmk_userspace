@@ -29,9 +29,15 @@ enum layers {
 #	define MAC_LAYER _MAC
 #endif
 
-enum custom_keycodes {
-	OS_APP = SAFE_RANGE,
-	OS_PS,
+enum custom_keycodes {      // Action           ANSI        MAC
+	OS_APP = SAFE_RANGE,    // Menu             KC_APP      Ctrl F2
+	OS_PS,                  // Print Screen     KC_PSCR     Shift + 3 (Cmd + OS_PS = Cmd+Shift+4)
+	OS_SA,					// Select All       Ctrl+A	    Command+A
+	OS_CP,					// Copy             Ctrl+C	    Command+C
+	OS_CT,					// Cut              Ctrl+X	    Command+X
+	OS_P,					// Paste            Ctrl+V	    Command+V
+	OS_UD,					// Undo             Ctrl+Z	    Command+Z
+	OS_RD,					// Redo             Ctrl+Y	    Command+Shift+Z
 	JUSTIN_SAFE_RANGE
 };
 

@@ -42,10 +42,8 @@ bool process_record_user_justin(uint16_t keycode, keyrecord_t *record) {
 				unregister_code(KC_APP);
 				app_registered = false;
 			}
-
 			return false;
 		}
-
 		case OS_PS: {
 			/*
 			Alter Print Screen key behavior.
@@ -75,10 +73,43 @@ bool process_record_user_justin(uint16_t keycode, keyrecord_t *record) {
 				unregister_code(KC_PSCR);
 				pscr_registered = false;
 			}
-
 			return false;
 		}
+        case OS_SA:
+            if (record->event.pressed) {
+                tap_code16(is_mac_mode() ? LGUI(KC_A) : LCTL(KC_A));
+            }
+            return false;
 
+        case OS_CP:
+            if (record->event.pressed) {
+                tap_code16(is_mac_mode() ? LGUI(KC_C) : LCTL(KC_C));
+            }
+            return false;
+
+        case OS_CT:
+            if (record->event.pressed) {
+                tap_code16(is_mac_mode() ? LGUI(KC_X) : LCTL(KC_X));
+            }
+            return false;
+
+        case OS_P:
+            if (record->event.pressed) {
+                tap_code16(is_mac_mode() ? LGUI(KC_V) : LCTL(KC_V));
+            }
+            return false;
+
+        case OS_UD:
+            if (record->event.pressed) {
+                tap_code16(is_mac_mode() ? LGUI(KC_Z) : LCTL(KC_Z));
+            }
+            return false;
+
+        case OS_RD:
+            if (record->event.pressed) {
+                tap_code16(is_mac_mode() ? LGUI(LSFT(KC_Z)) : LCTL(KC_Y));
+            }
+            return false;
 		default:
 			return true;
 	}
