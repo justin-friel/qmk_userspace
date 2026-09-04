@@ -46,11 +46,11 @@ Layer 2: Convenience / Caps held
 ┌─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬───────────┐
 │ `~  │ F1  │ F2  │ F3  │ F4  │ F5  │ F6  │ F7  │ F8  │ F9  │ F10 │ F11 │ F12 │  Delete   │
 ├─────┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬────────┤
-│    ▽   │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │ PgUp│  ↑  │ PgDn│ PtSc│ Ins │ ScLk│   ▽    │
+│    ▽   │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │OS_RD│ PgUp│  ↑  │OS_PS│ PtSc│ Ins │ ScLk│   ▽    │
 ├────────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴────────┤
-│    ▽    │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │ Home│  ←  │  ↓  │  →  │  ▽  │  ▽  │      ▽      │
+│    ▽    │OS_SA│  ▽  │  ▽  │  ▽  │  ▽  │ Home│  ←  │  ↓  │  →  │  ▽  │  ▽  │      ▽      │
 ├─────────┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴─────────────┤
-│     ▽      │  ▽  │  ▽  │  ▽  │  ▽  │  ▽  │ End │  ▽  │  ▽  │  ▽  │  ▽  │       ▽        │
+│     ▽      │OS_UD│OS_CT│OS_CP│OS_P │  ▽  │ End │  ▽  │  ▽  │  ▽  │  ▽  │       ▽        │
 ├───────┬────┴──┬──┴────┬┴─────┴─────┴─────┴─────┴─────┴──┬──┴────┬┴─────┴┬───────┬───────┤
 │   ▽   │   ▽   │   ▽   │                ▽                │   ▽   │ Menu  │   ▽   │   ▽   │
 └───────┴───────┴───────┴─────────────────────────────────┴───────┴───────┴───────┴───────┘
@@ -62,7 +62,7 @@ Layer 3: Settings
 ├─────┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬────────┤
 │    ▽   │  ▽  │  ▽  │  ▽  │RTOG │RNXT │RHUEU│RSATU│RVALU│RSPDU│  ▽  │  ▽  │  ▽  │   ▽    │
 ├────────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴────────┤
-│  Caps   │Ansi │  ▽  │  ▽  │  ▽  │RPRV │RHUED│RSATD│RVALD│RSPDD│  ▽  │  ▽  │      ▽      │
+│  Caps   │ANSI │  ▽  │  ▽  │  ▽  │RPRV │RHUED│RSATD│RVALD│RSPDD│  ▽  │  ▽  │      ▽      │
 ├─────────┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴─────────────┤
 │     ▽      │ BL- │ BL+ │BLTG │  ▽  │  ▽  │ NKRO│ Mac │  ▽  │  ▽  │  ▽  │       ▽        │
 ├───────┬────┴──┬──┴────┬┴─────┴─────┴─────┴─────┴─────┴──┬──┴────┬┴─────┴┬───────┬───────┤
@@ -110,10 +110,17 @@ Mac mode is toggleable on the settings layer, but not stored in EEPROM.
 
 #### Cross-Platform keycodes
 
-Custom keycodes are implemented to avoid dead keys when in Mac mode.
+Custom keycodes are implemented to avoid dead keys when in Mac mode and standardize common shortcuts between ANSI and Mac keyboards.
 
-- `OS_PS` acts as Print Screen (`KC_PSCR`) in ANSI mode and as the equivalent keyboard shortcut in Mac mode.
-- `OS_APP` is the Menu key (`KC_APP`) in ANSI mode and is the shortcut to the global menu in Mac mode.
+| Keycode  | Function        | ANSI       | MAC
+|:---      |:---             |:---        |:---
+| OS_PS,   | Print Screen    | KC_PSCR     | Shift + 3 (Cmd + OS_PS = Cmd+Shift+4)
+| OS_SA,   | Select All      | Ctrl+A      | Command+A
+| OS_CP,   | Copy            | Ctrl+C	   | Command+C
+| OS_CT,   | Cut             | Ctrl+X	   | Command+X
+| OS_P,    | Paste           | Ctrl+V	   | Command+V
+| OS_UD,   | Undo            | Ctrl+Z	   | Command+Z
+| OS_RD,   | Redo            | Ctrl+Y	   | Command+Shift+Z
 
 ### Navigation Layer
 
